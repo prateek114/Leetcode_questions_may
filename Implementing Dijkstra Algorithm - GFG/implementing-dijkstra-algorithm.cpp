@@ -10,15 +10,16 @@ class Solution
     //from the source vertex S.
     vector <int> dijkstra(int V, vector<vector<int>> adj[], int S)
     {
-        priority_queue<pair<int,int>,vector<pair<int,int>>,greater<pair<int,int>>>pq;
+        set<pair<int,int>>st;
         
         vector<int>dist(V,1e9);
         dist[S]=0;
-        pq.push({0,S});
+        st.insert({0,S});
         
-        while(!pq.empty()){
-            auto it=pq.top();
-            pq.pop();
+        while(!st.empty()){
+            auto it=*(st.begin());
+            st.erase(it);
+            
             int distance=it.first;
             int node=it.second;
             
@@ -27,8 +28,11 @@ class Solution
                 int wgt=ngh[1];
                 
                 if(distance+wgt<dist[adjNode]){
+                    if(dist[adjNode]!=1e9){
+                        st.erase({dist[adjNode],adjNode});
+                    }
                     dist[adjNode]=distance+wgt;
-                    pq.push({distance+wgt,adjNode});
+                    st.insert({distance+wgt,adjNode});
                 }
             }
         }
